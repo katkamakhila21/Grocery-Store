@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Contact</title>
+<link rel="stylesheet" href="gro.css">
+
+</head>
+
+<body>
+
+<header>
+<h2>Contact Us</h2>
+<nav>
+<a href="index.html">Home</a>
+<a href="products.html">Products</a>
+<a href="cart.html">Cart</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+
+</nav>
+</header>
+
+<div class="container">
+
+<!-- FORM -->
+<div class="form-box">
+<h2>Send Message</h2>
+
+<form id="contactForm">
+
+<div class="input-group">
+<input type="text" id="name" placeholder=" " required>
+<label>Name</label>
+</div>
+
+<div class="input-group">
+<input type="email" id="email" placeholder=" " required>
+<label>Email</label>
+</div>
+
+<div class="input-group">
+<textarea id="message" placeholder=" " required></textarea>
+<label>Message</label>
+</div>
+
+<button type="submit">Send Message</button>
+</form>
+</div>
+
+<!-- INFO -->
+<div class="info-box">
+<h3>Contact Info</h3>
+<p>📍 India</p>
+<p>📞 9876543210</p>
+<p>📧 grocery@gmail.com</p>
+<p>⏰ 9 AM - 9 PM</p>
+</div>
+
+</div>
+
+<!-- REVIEWS -->
+<section class="reviews">
+<h2>⭐ Customer Reviews</h2>
+
+<div class="review-container">
+<div class="review">
+<p>"Super fast delivery 🚀"</p>
+<h4>- Riya</h4>
+</div>
+
+<div class="review">
+<p>"Fresh and organic products 🌿"</p>
+<h4>- Arjun</h4>
+</div>
+
+<div class="review">
+<p>"Best grocery website!"</p>
+<h4>- Sneha</h4>
+</div>
+</div>
+</section>
+
+<!-- VIDEO -->
+<div class="video">
+<h2>🎥 Watch Our Service</h2>
+<video width="300" controls>
+<source src="sample.mp4" type="video/mp4">
+</video>
+</div>
+
+<!-- MAP -->
+<iframe class="map"
+src="https://www.google.com/maps?q=india&output=embed">
+</iframe>
+
+<!-- TOAST -->
+<div class="toast" id="toast">Message Sent Successfully ✅</div>
+<script>
+    let contactForm = document.getElementById("contactForm");
+if(contactForm){
+    contactForm.addEventListener("submit", function(e){
+        e.preventDefault();
+
+        let name = document.getElementById("name");
+        let email = document.getElementById("email");
+        let message = document.getElementById("message");
+        let msg = document.getElementById("formMsg");
+
+        // Reset previous borders and message
+        name.style.border = "";
+        email.style.border = "";
+        message.style.border = "";
+        msg.innerText = "";
+
+        // Check empty fields
+        if(name.value.trim() === "" || email.value.trim() === "" || message.value.trim() === ""){
+            msg.innerText = "All fields should be filled";
+            msg.style.color = "red";
+            if(name.value === "") name.style.border = "2px solid red";
+            if(email.value === "") email.style.border = "2px solid red";
+            if(message.value === "") message.style.border = "2px solid red";
+            return;
+        }
+
+        // Validate email
+        let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+        if(!email.value.match(emailPattern)){
+            msg.innerText = "Enter valid email";
+            msg.style.color = "red";
+            email.style.border = "2px solid red";
+            return;
+        }
+
+        // Success
+        msg.innerText = "Sent Successfully";
+        msg.style.color = "green";
+        contactForm.reset();
+
+        // Toast
+        let toast = document.getElementById("toast");
+        if(toast){
+            toast.innerText = "Message Sent Successfully ✅";
+            toast.style.display = "block";
+            setTimeout(()=> toast.style.display="none", 3000);
+        }
+    });
+}
+
+// INITIALIZE CART COUNT
+updateCartCount();
+</script>
+</body>
+</html>
+</script>
+
+</body>
+</html>

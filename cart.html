@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cart</title>
+
+<link rel="stylesheet" href="gro.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* NEW FORM STYLING */
+.checkout-form {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f8f8;
+    border-radius: 10px;
+}
+
+.checkout-form input,
+.checkout-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.checkout-form button {
+    margin-top: 10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+<h2>🛒 Your Cart</h2>
+<nav>
+<a href="index.html">Home</a>
+<a href="products.html">Products</a>
+<a href="cart.html">Cart</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</nav>
+</header>
+
+<div class="cart">
+<h2>Your Cart Items</h2>
+
+<div id="cartItems"></div>
+<div class="total" id="total"></div>
+
+<div class="actions">
+<button class="clear" onclick="clearCart()">Clear Cart</button>
+</div>
+
+<!-- ✅ NEW CHECKOUT FORM -->
+<div class="checkout-form">
+<h3>Delivery Details</h3>
+
+<input type="text" id="name" placeholder="Full Name" required>
+<input type="tel" id="phone" placeholder="Phone Number" required>
+<input type="email" id="email" placeholder="Email Address" required>
+<textarea id="address" placeholder="Delivery Address" rows="3" required></textarea>
+
+<button class="checkout" onclick="checkout()">Place Order</button>
+</div>
+
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function displayCart(){
+    let container = document.getElementById("cartItems");
+    let total = 0;
+    container.innerHTML = "";
+
+    if(cart.length === 0){
+        container.innerHTML = "<p class='empty'>Your cart is empty 🛒</p>";
+        document.getElementById("total").innerText = "";
+        return;
+    }
+
+    cart.forEach((item,index)=>{
+        let div = document.createElement("div");
+        div.className = "cart-item";
+
+        let subtotal = item.price * item.qty;
+
+        div.innerHTML = `
+        <div class="item-info">
+        <strong>${item.name}</strong><br>
+        ₹${item.price} × ${item.qty} = <b>₹${subtotal}</b>
+        </div>
+
+        <div class="qty">
+        <button onclick="changeQty(${index},-1)">-</button>
+        ${item.qty}
+        <button onclick="changeQty(${index},1)">+</button>
+        </div>
+
+        <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+        `;
+
+        container.appendChild(div);
+        total += subtotal;
+    });
+
+    document.getElementById("total").innerText = "Total: ₹" + total;
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+// CHANGE QTY
+function changeQty(index,change){
+    cart[index].qty += change;
+
+    if(cart[index].qty <= 0){
+        cart.splice(index,1);
+    }
+
+    displayCart();
+}
+
+// REMOVE ITEM
+function removeItem(index){
+    cart.splice(index,1);
+    displayCart();
+}
+
+// CLEAR CART
+function clearCart(){
+    if(confirm("Are you sure you want to clear cart?")){
+        cart = [];
+        localStorage.setItem("cart", JSON.stringify(cart));
+        displayCart();
+    }
+}
+
+// ✅ NEW CHECKOUT FUNCTION WITH VALIDATION
+function checkout(){
+
+    if(cart.length === 0){
+        alert("Cart is empty!");
+        return;
+    }
+
+    let name = document.getElementById("name").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let address = document.getElementById("address").value.trim();
+
+    // VALIDATION
+    if(name === "" || phone === "" || email === "" || address === ""){
+        alert("Please fill all delivery details!");
+        return;
+    }
+
+    if(phone.length < 10){
+        alert("Enter valid phone number!");
+        return;
+    }
+
+    // SAVE ORDER DETAILS (OPTIONAL)
+    let order = {
+        name,
+        phone,
+        email,
+        address,
+        cart
+    };
+
+    localStorage.setItem("orderDetails", JSON.stringify(order));
+
+    alert("🎉 Order placed successfully!\n\nThank you " + name);
+
+    cart = [];
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // CLEAR FORM
+    document.getElementById("name").value = "";
+    document.getElementById("phone").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("address").value = "";
+
+    displayCart();
+}
+
+// LOAD
+displayCart();
+</script>
+
+</body>
+</html>
